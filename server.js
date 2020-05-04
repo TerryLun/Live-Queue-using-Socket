@@ -14,7 +14,15 @@ app.use(express.json());
 io.on('connection', (socket) => {
    console.log('New web socket connection');
 
+   //emit welcome message to single client
    socket.emit('message', 'Welcome to ChatCord!');
+
+   //broadcast when a user connects
+   //broadcast to every client except the one thats conencting
+   socket.broadcast.emit();
+
+   //broadcast to every client
+   io.emit();
 });
 
 app.get('*', (req, res) => {

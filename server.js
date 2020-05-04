@@ -13,6 +13,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 io.on('connection', (socket) => {
    console.log('New web socket connection');
+
+   socket.emit('message', 'Welcome to ChatCord!');
 });
 
 app.get('*', (req, res) => {

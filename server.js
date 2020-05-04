@@ -12,17 +12,17 @@ const io = socketio(server);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 io.on('connection', (socket) => {
-   console.log('New web socket connection');
-
    //emit welcome message to single client
    socket.emit('message', 'Welcome to ChatCord!');
 
    //broadcast when a user connects
    //broadcast to every client except the one thats conencting
-   socket.broadcast.emit();
+   socket.broadcast.emit('message', 'A user has joined the chat');
 
-   //broadcast to every client
-   io.emit();
+   socket.on('disconnect', () => {
+      //broadcast to every client
+      io.emit('message', 'A user has left the chat.');
+   });
 });
 
 app.get('*', (req, res) => {

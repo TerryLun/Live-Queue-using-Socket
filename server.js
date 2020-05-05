@@ -13,7 +13,7 @@ const {
 } = require('./util/users');
 // init and configs
 const app = express();
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 const io = socketio(server);
 const botName = 'ChatBot';

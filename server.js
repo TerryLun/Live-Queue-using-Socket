@@ -23,6 +23,12 @@ io.on('connection', (socket) => {
       //broadcast to every client
       io.emit('message', 'A user has left the chat.');
    });
+
+   // listen for emitted chat message
+   socket.on('chatMessage', (msg) => {
+      // console.log(msg);
+      io.emit('message', msg);
+   });
 });
 
 app.get('*', (req, res) => {

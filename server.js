@@ -38,6 +38,12 @@ io.on('connection', (socket) => {
             'message',
             formatMessage(botName, `${user.username} has joined the chat`)
          );
+
+      //send users and room info in sidebar
+      io.to(user.room).emit('roomUsers', {
+         room: user.room,
+         users: getRoomUsers(user.room),
+      });
    });
 
    // listen for emitted chat message

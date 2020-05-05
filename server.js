@@ -4,6 +4,8 @@ const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
 
+const formatMessage = require('./util/messages');
+
 // init and configs
 const app = express();
 const PORT = 3000 || process.env.PORT;

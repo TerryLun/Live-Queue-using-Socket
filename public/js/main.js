@@ -1,10 +1,14 @@
 const socket = io();
 const chatForm = document.getElementById('chat-form');
+const chatMessages = document.querySelector('.chat-messages');
 
 // message from server
 socket.on('message', (message) => {
    // console.log(message);
    outputMessage(message);
+
+   // scroll down after message received
+   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
 // message submit
@@ -17,6 +21,10 @@ chatForm.addEventListener('submit', (e) => {
    // emit chat message to server
    // console.log(msg);
    socket.emit('chatMessage', msg);
+
+   // clear input and focus after submit
+   e.target.elements.msg.value = '';
+   e.target.elements.msg.focus();
 });
 
 // output reveived message to chat board

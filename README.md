@@ -1,4 +1,4 @@
-# Chat-App-with-Socket
+# Queue-App-with-Socket
 
 Using Node.js, Express and Socket.io
 

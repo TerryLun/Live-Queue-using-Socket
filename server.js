@@ -21,14 +21,22 @@ const botName = 'ChatBot';
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
+arr = [];
+
 io.on('connection', (socket) => {
    socket.on('joinRoom', ({ username, room }) => {
       const user = userJoin(socket.id, username, room);
-
+      arr.push(user);
       socket.join(user.room);
 
       //emit welcome message to single client
-      socket.emit('message', formatMessage(botName, 'Welcome to ChatCord!'));
+      socket.emit(
+         'message',
+         formatMessage(
+            botName,
+            'Your position is: ' + String(arr.indexOf(user))
+         )
+      );
 
       //broadcast when a user connects
       //broadcast to every client except the one thats conencting
@@ -36,8 +44,14 @@ io.on('connection', (socket) => {
          .to(user.room)
          .emit(
             'message',
-            formatMessage(botName, `${user.username} has joined the chat`)
+            formatMessage(botName, `${user.username} has joined the queue.`)
          );
+
+      for (let i = 0; i < arr.length; i++) {
+         socket.broadcast
+            .to(arr[i].id)
+            .emit('message', formatMessage(botName, `Your position is: ${i}`));
+      }
 
       //send users and room info in sidebar
       io.to(user.room).emit('roomUsers', {
@@ -54,11 +68,22 @@ io.on('connection', (socket) => {
 
    socket.on('disconnect', () => {
       const user = userLeave(socket.id);
+
+      const index = arr.indexOf(user);
+      arr.splice(index, 1);
+
       if (user) {
          //broadcast to every client
          io.to(user.room).emit(
             'message',
-            formatMessage(botName, `${user.username} has left the chat.`)
+            formatMessage(botName, `${user.username} has left the queue.`)
+         );
+      }
+
+      for (let i = 0; i < arr.length; i++) {
+         io.to(arr[i].id).emit(
+            'message',
+            formatMessage(botName, `Your position is: ${i}`)
          );
       }
    });
